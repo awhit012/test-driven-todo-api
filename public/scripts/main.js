@@ -1,81 +1,64 @@
 // wait for DOM to load before running JS
 $(function() {
+  app = new App();
+  app.render();
+  app.get();
+  app.setUpPost();
+  app.setUpPut();
+  app.setUpDelete();
+});
 
-  // base API route
-  var baseUrl = '/api/todos';
+function App(){
+  this.baseUrl = '/api/todos';
+  this.allTodos = [];
+  this.$todosList = $('#todos-list');
+  this.$createTodo = $('#create-todo');
+  this.$source = $('#todos-template').html();
+  this.template = Handlebars.compile(this.$source);
+};
 
-  // array to hold todo data from API
-  var allTodos = [];
+App.prototype.render = function() {
+    this.$todosList.empty();
+    this.todosHtml = this.template({ todos: this.allTodos });
+    this.$todosList.append(this.todosHtml);
+};
 
-  // element to display list of todos
-  var $todosList = $('#todos-list');
-
-  // form to create new todo
-  var $createTodo = $('#create-todo');
-
-  // compile handlebars template
-  var source = $('#todos-template').html();
-  var template = Handlebars.compile(source);
-
-  // helper function to render all todos to view
-  // note: we empty and re-render the collection each time our todo data changes
-  var render = function() {
-    // empty existing todos from view
-    $todosList.empty();
-
-    // pass `allTodos` into the template function
-    var todosHtml = template({ todos: allTodos });
-
-    // append html to the view
-    $todosList.append(todosHtml);
-  };
-
+App.prototype.get = function() {
+  var app = this;
   // GET all todos on page load
-  $.get(baseUrl, function (data) {
+  $.get(this.baseUrl, function (data) {
     console.log(data);
-
-    // set `allTodos` to todo data from API
-    allTodos = data.todos;
-
-    // render all todos to view
-    render();
+    app.allTodos = data.todos;
+    app.render();
   });
+};
 
-  // listen for submit even on form
-  $createTodo.on('submit', function (event) {
+App.prototype.setUpPost = function(){
+  var app = this;
+  this.$createTodo.on('submit', function (event) {
     event.preventDefault();
-
-    // serialze form data
     var newTodo = $(this).serialize();
 
     // POST request to create new todo
-    $.post(baseUrl, newTodo, function (data) {
+    $.post(app.baseUrl, newTodo, function (data) {
       console.log(data);
-
-      // add new todo to `allTodos`
-      allTodos.push(data);
-
-      // render all todos to view
-      render();
+      app.allTodos.push(data);
+      app.render();
     });
-
-    // reset the form
-    $createTodo[0].reset();
-    $createTodo.find('input').first().focus();
+    app.$createTodo[0].reset();
+    app.$createTodo.find('input').first().focus();
   });
+};
 
-  // add event-handlers to todos for updating/deleting
-  $todosList
-
-    // for update: submit event on `.update-todo` form
-    .on('submit', '.update-todo', function (event) {
+App.prototype.setUpPut = function(){
+  var app = this;
+  this.$todosList.on('submit', '.update-todo', function (event) {
       event.preventDefault();
-      
+
       // find the todo's id (stored in HTML as `data-id`)
       var todoId = $(this).closest('.todo').attr('data-id');
-
       // find the todo to update by its id
-      var todoToUpdate = allTodos.filter(function (todo) {
+      var todoToUpdate = app.allTodos.filter(function (todo) {
         return todo._id == todoId;
       })[0];
 
@@ -85,42 +68,42 @@ $(function() {
       // PUT request to update todo
       $.ajax({
         type: 'PUT',
-        url: baseUrl + '/' + todoId,
+        url: app.baseUrl + '/' + todoId,
         data: updatedTodo,
         success: function(data) {
           // replace todo to update with newly updated version (data)
-          allTodos.splice(allTodos.indexOf(todoToUpdate), 1, data);
-
-          // render all todos to view
-          render();
+          app.allTodos = data;
+          app.render();
         }
       });
     })
-    
-    // for delete: click event on `.delete-todo` button
-    .on('click', '.delete-todo', function (event) {
-      event.preventDefault();
 
-      // find the todo's id (stored in HTML as `data-id`)
-      var todoId = $(this).closest('.todo').attr('data-id');
+App.prototype.setUpDelete = function(){
+  var app = this;
+  // for delete: click event on `.delete-todo` button
+  this.$todosList.on('click', '.delete-todo', function (event) {
+    event.preventDefault();
 
-      // find the todo to delete by its id
-      var todoToDelete = allTodos.filter(function (todo) {
-        return todo._id == todoId;
-      })[0];
+    // find the todo's id (stored in HTML as `data-id`)
+    var todoId = $(this).closest('.todo').attr('data-id');
 
-      // DELETE request to delete todo
-      $.ajax({
-        type: 'DELETE',
-        url: baseUrl + '/' + todoId,
-        success: function(data) {
-          // remove deleted todo from all todos
-          allTodos.splice(allTodos.indexOf(todoToDelete), 1);
+    // find the todo to delete by its id
+    var todoToDelete = app.allTodos.filter(function (todo) {
+      return todo._id == todoId;
+    })[0];
 
-          // render all todos to view
-          render();
-        }
-      });
+    // DELETE request to delete todo
+    $.ajax({
+      type: 'DELETE',
+      url: app.baseUrl + '/' + todoId,
+      success: function(data) {
+        // remove deleted todo from all todos
+        app.allTodos.splice(app.allTodos.indexOf(todoToDelete), 1);
+
+        // render all todos to view
+        app.render();
+      }
     });
-
-});
+  });
+};
+};
