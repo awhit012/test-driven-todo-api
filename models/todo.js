@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
 
 var TodoSchema = new Schema({
   task: String,
-  description: String
+  status: String
 });
 
 var Todo = mongoose.model('Todo', TodoSchema);
