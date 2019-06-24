@@ -13,9 +13,8 @@ app.use(express.static(__dirname + '/public'));
 // set view engine to hbs (handlebars)
 app.set('view engine', 'hbs');
 
-console.log(config.password)
 // connect to mongodb
-mongoose.connect(`mongodb://alex:${config.password}>@ds343127.mlab.com:43127/todo?authSource=todo&w=1`);
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/todo');
 
 // require Todo model
 var Todo = require('./models/todo');
