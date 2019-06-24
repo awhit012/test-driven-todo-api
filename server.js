@@ -3,7 +3,6 @@ var express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
     mongoose = require('mongoose');
-    config = require('./config.js')
 // configure bodyParser (for receiving form data)
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -13,8 +12,8 @@ app.use(express.static(__dirname + '/public'));
 // set view engine to hbs (handlebars)
 app.set('view engine', 'hbs');
 
-// connect to mongodb
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/todo');
+// connect to mongodb
 
 // require Todo model
 var Todo = require('./models/todo');
