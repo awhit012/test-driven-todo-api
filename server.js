@@ -30,6 +30,7 @@ app.get('/api/todos', function (req, res) {
 
 // create new todo
 app.post('/api/todos', function (req, res) {
+  console.log(req.body)
   res.set(headers)
 
   // create new todo with form data (`req.body`)
@@ -124,8 +125,8 @@ app.listen(port, function() {
 
 headers = {};
 headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-headers['Access-Control-Allow-Methods'] = 'GET, POST, PATCH, PUT, DELETE'
+headers['Access-Control-Allow-Methods'] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
 headers['Access-Control-Allow-Credentials'] = true
 headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
-headers["Access-Control-Allow-Headers"] = "X-Requested-With";
+headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-Requested-By";
 headers['Content-Type'] = 'application/json'
