@@ -30,6 +30,8 @@ app.get('/api/todos', function (req, res) {
 
 // create new todo
 app.post('/api/todos', function (req, res) {
+  res.set(headers)
+
   // create new todo with form data (`req.body`)
   var newTodo = new Todo(req.body);
   console.log(req.body)
@@ -45,6 +47,8 @@ app.post('/api/todos', function (req, res) {
 
 // get one todo
 app.get('/api/todos/:id', function (req, res) {
+  res.set(headers)
+
   // get todo id from url params (`req.params`)
   var todoId = req.params.id;
 
@@ -64,6 +68,8 @@ app.get('/api/todos/:id', function (req, res) {
 
 // update todo
 app.put('/api/todos/:id', function (req, res) {
+  res.set(headers)
+
   // get todo id from url params (`req.params`)
   var todoId = req.params.id;
 
@@ -91,6 +97,8 @@ app.put('/api/todos/:id', function (req, res) {
 
 // delete todo
 app.delete('/api/todos/:id', function (req, res) {
+  res.set(headers)
+
   // get todo id from url params (`req.params`)
   var todoId = req.params.id;
   // find todo in db by id and remove
