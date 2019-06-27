@@ -5,12 +5,10 @@ var express = require('express'),
     mongoose = require('mongoose');
 // configure bodyParser (for receiving form data)
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // serve static files from public folder
 app.use(express.static(__dirname + '/public'));
-
-// set view engine to hbs (handlebars)
-app.set('view engine', 'hbs');
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/todo');
 // connect to mongodb
@@ -36,7 +34,7 @@ app.get('/api/todos', function (req, res) {
 app.post('/api/todos', function (req, res) {
   // create new todo with form data (`req.body`)
   var newTodo = new Todo(req.body);
-
+  console.log(req.body)
   // save new todo in db
   newTodo.save(function (err, savedTodo) {
     if (err) {
@@ -96,7 +94,6 @@ app.put('/api/todos/:id', function (req, res) {
 app.delete('/api/todos/:id', function (req, res) {
   // get todo id from url params (`req.params`)
   var todoId = req.params.id;
-
   // find todo in db by id and remove
   Todo.findOneAndRemove({ _id: todoId }, function (err, deletedTodo) {
     if (err) {
