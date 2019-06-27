@@ -20,11 +20,13 @@ var Todo = require('./models/todo');
 
 // get all todos
 app.get('/api/todos', function (req, res) {
+
   // find all todos in db
   Todo.find(function (err, allTodos) {
     if (err) {
       res.status(500).json({ error: err.message });
     } else {
+      res.writeHead(200, headers);
       res.json({ todos: allTodos });
     }
   });
@@ -110,3 +112,11 @@ const port = process.env.PORT || 3000;
 app.listen(port, function() {
   console.log('server started');
 });
+
+headers = {};
+headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+headers['Access-Control-Allow-Methods'] = 'GET, POST, PATCH, PUT, DELETE'
+headers['Access-Control-Allow-Credentials'] = true
+headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
+headers["Access-Control-Allow-Headers"] = "X-Requested-With";
+headers['Content-Type'] = 'application/json'
