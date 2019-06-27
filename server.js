@@ -17,13 +17,12 @@ var Todo = require('./models/todo');
 
 // get all todos
 app.get('/api/todos', function (req, res) {
-
+  req.writeHead(200, headers);
   // find all todos in db
   Todo.find(function (err, allTodos) {
     if (err) {
       res.status(500).json({ error: err.message });
     } else {
-      res.writeHead(200, headers);
       res.json({ todos: allTodos });
     }
   });
