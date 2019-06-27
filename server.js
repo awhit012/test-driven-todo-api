@@ -17,7 +17,7 @@ var Todo = require('./models/todo');
 
 // get all todos
 app.get('/api/todos', function (req, res) {
-  req.writeHead(200, headers);
+  res.set(headers)
   // find all todos in db
   Todo.find(function (err, allTodos) {
     if (err) {
