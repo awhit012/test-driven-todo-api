@@ -78,20 +78,26 @@ app.put('/api/todos/:id', function (req, res) {
   // get todo id from url params (`req.params`)
   var todoId = req.params.id;
 
+  console.log(req.body)
+
   // find todo in db by id
   Todo.findOne({ _id: todoId }, function (err, foundTodo) {
     if (err) {
       res.status(500).json({ error: err.message });
     } else {
       // update the todos's attributes
-      foundTodo.task = req.body.task;
-      foundTodo.description = req.body.description;
+      if(req.body.task) {
+        foundTodo.task = req.body.task;
+      } if(req.body.status) {
+        foundTodo.status = req.body.status;
+      }
 
       // save updated todo in db
       foundTodo.save(function (err, savedTodo) {
         if (err) {
           res.status(500).json({ error: err.message });
         } else {
+          console.log(savedTodo)
           res.json(savedTodo);
         }
       });
