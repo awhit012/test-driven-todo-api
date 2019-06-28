@@ -1,11 +1,14 @@
 // require express and other modules
-var express = require('express'),
-    app = express(),
-    bodyParser = require('body-parser'),
-    mongoose = require('mongoose');
+const express = require('express'),
+      app = express(),
+      bodyParser = require('body-parser'),
+      mongoose = require('mongoose');
+      cors = require('cors');
+
 // configure bodyParser (for receiving form data)
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors())
 
 // serve static files from public folder
 app.use(express.static(__dirname + '/public'));
@@ -17,7 +20,6 @@ var Todo = require('./models/todo');
 
 // get all todos
 app.get('/api/todos', function (req, res) {
-  res.set(headers)
   // find all todos in db
   Todo.find(function (err, allTodos) {
     if (err) {
@@ -31,8 +33,6 @@ app.get('/api/todos', function (req, res) {
 // create new todo
 app.post('/api/todos', function (req, res) {
   console.log(req.body)
-  res.set(headers)
-
   // create new todo with form data (`req.body`)
   var newTodo = new Todo(req.body);
   console.log(req.body)
@@ -48,8 +48,6 @@ app.post('/api/todos', function (req, res) {
 
 // get one todo
 app.get('/api/todos/:id', function (req, res) {
-  res.set(headers)
-
   // get todo id from url params (`req.params`)
   var todoId = req.params.id;
 
@@ -69,8 +67,6 @@ app.get('/api/todos/:id', function (req, res) {
 
 // update todo
 app.put('/api/todos/:id', function (req, res) {
-  res.set(headers)
-
   // get todo id from url params (`req.params`)
   var todoId = req.params.id;
 
@@ -98,8 +94,6 @@ app.put('/api/todos/:id', function (req, res) {
 
 // delete todo
 app.delete('/api/todos/:id', function (req, res) {
-  res.set(headers)
-
   // get todo id from url params (`req.params`)
   var todoId = req.params.id;
   // find todo in db by id and remove
@@ -122,11 +116,3 @@ const port = process.env.PORT || 3000;
 app.listen(port, function() {
   console.log('server started');
 });
-
-headers = {};
-headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-headers['Access-Control-Allow-Methods'] = 'GET, POST, PATCH, PUT, DELETE, OPTIONS'
-headers['Access-Control-Allow-Credentials'] = true
-headers['Access-Control-Allow-Headers'] = 'Authorization, Content-Type'
-headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-Requested-By";
-headers['Content-Type'] = 'application/json'
