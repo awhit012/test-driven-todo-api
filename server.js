@@ -5,10 +5,17 @@ const express = require('express'),
       mongoose = require('mongoose');
       cors = require('cors');
 
+
+var corsOptions = {
+  origin: 'http://localhost:3000',
+}
+app.use(cors())
+
 // configure bodyParser (for receiving form data)
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors())
+
+
 
 // serve static files from public folder
 app.use(express.static(__dirname + '/public'));
