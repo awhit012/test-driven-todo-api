@@ -9,7 +9,7 @@ const express = require('express'),
 var corsOptions = {
   origin: 'http://localhost:3000',
 }
-app.use(cors())
+app.use(cors(corsOptions))
 
 // configure bodyParser (for receiving form data)
 app.use(bodyParser.urlencoded({ extended: true }));
